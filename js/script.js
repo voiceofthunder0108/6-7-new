@@ -5,7 +5,8 @@
   const optArticleSelector = '.post',
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
-    optArticleTagsSelector = '.post-tags .list';
+    optArticleTagsSelector = '.post-tags .list',
+    optArticleAuthorSelector = '.post-author';
 
   /* ***1. WYŚWIETLANIE PRAWIDŁOWEGO ARTYKUŁU PO KLIKNIECIU W LINK NA LIŚCIE TYTUŁÓW (i pogrubienie czcionki dla aktywnego linka)*** */
   const titleClickHandler = function(event){
@@ -144,6 +145,53 @@
   };
   
   addClickListenersToTags();
+
+  /* ***5. GENEROWANIE AUTORÓW W ARTYKUŁACh (jako linki)*** */
+  const generateAuthors = function(){
+    const articles = document.querySelectorAll(optArticleSelector);
+
+    for (const article of articles) {
+      const articleWrapper = article.querySelector(optArticleAuthorSelector);
+
+      let html = '';
+
+      const articleAuthor = article.getAttribute('data-author');
+
+      const authorHTML = '<a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>';
+
+      html = html + authorHTML;
+
+      articleWrapper.innerHTML = html;
+    }
+  };
+
+  generateAuthors();
+  /* ***6. FILTROWANIE LISTY ARTYKÓŁÓW PO KLIKNIĘCIU W AUTORA *** */
+  const authorClickHandler = function(event){
+    event.preventDefault();
+    const clickedElement = this;
+    const href = clickedElement.getAttribute('href');
+    const author = href.replace('#author-', '');
+    const activeAuthorLinks = document.querySelectorAll('a.active[href^="#author-"]');
+    for (let activeAuthorLink of activeAuthorLinks) {
+      activeAuthorLink.classList.remove('active');
+    }
+    const authorLinks = document.querySelectorAll('a[href="' + href + '"]');
+    for (const authorLink of authorLinks) {
+      authorLink.classList.add('active');
+    }
+    generateTitleLinks('[data-author="' + author + '"]');
+  };
+
+  const addClickListenersToAuthors = function(){
+    const authorLinks = document.querySelectorAll('a[href^="#author-"]');
+
+    for (const authorLink of authorLinks) {
+      authorLink.addEventListener('click', authorClickHandler);
+    }
+  };
+
+  addClickListenersToAuthors();
 }
 
 /*

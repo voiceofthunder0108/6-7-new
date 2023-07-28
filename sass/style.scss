@@ -118,6 +118,10 @@ body {
 .post-tags {
   display: flex;
 
+  li {
+    padding: 0 5px;
+  }
+
   p {
     margin: 0 10px 0 0;
   }
