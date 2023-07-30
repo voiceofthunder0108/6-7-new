@@ -6,7 +6,7 @@
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
     optArticleTagsSelector = '.post-tags .list',
-    optArticleAuthorSelector = '.post-author';
+    optArticleAuthorSelector = '.post-author',
     optTagsListSelector = '.tags.list';
 
   /* ***1. WYŚWIETLANIE PRAWIDŁOWEGO ARTYKUŁU PO KLIKNIECIU W LINK NA LIŚCIE TYTUŁÓW (i pogrubienie czcionki dla aktywnego linka)*** */
@@ -98,10 +98,15 @@
         /* [DONE] add generated code to html variable */
         html = html + tagHTML;
         /* [NEW] check if this link is NOT already in allTags */
-        if(allTags.indexOf(tagHTML) == -1){
-          /* [NEW] add generated code to allTags array */
-          allTags.push(tagHTML);
+        if(!allTags[tag]){
+          /* [NEW] add tag to allTags object */
+          allTags[tag] = 1;
+        } else {
+          allTags[tag]++;
         }
+        /* if(allTags.indexOf(tagHTML) == -1){
+          allTags.push(tagHTML);
+        } */
       /* [DONE] END LOOP: for each tag */
       }
       /* [DONE] insert HTML of all the links into the tags wrapper */
@@ -110,8 +115,21 @@
     }
     /* [NEW] find list of tags in right column */
     const tagList = document.querySelector(optTagsListSelector);
-    /* [NEW] add html from allTags to tagList */
-    tagList.innerHTML = allTags.join(' ');
+    /* [NEW] create variable for all links HTML code */
+    let allTagsHTML = '';
+
+    /* [NEW] START LOOP: for each tag in allTags: */
+    for(let tag in allTags){
+      /* [NEW] generate code of a link and add it to allTagsHTML */
+      allTagsHTML += '<li><a href="#tag-' + tag + '">' + tag + ' </a><span>(' + allTags[tag] + ')</span></li> ';
+    }
+
+    /* [NEW] END LOOP: for each tag in allTags: */
+
+    /*[NEW] add HTML from allTagsHTML to tagList */
+    tagList.innerHTML = allTagsHTML;
+    /* [OLD] add html from allTags to tagList */
+    //tagList.innerHTML = allTags.join(' ');
   };
   
   generateTags();
